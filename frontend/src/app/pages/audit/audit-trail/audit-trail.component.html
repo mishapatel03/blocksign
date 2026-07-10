@@ -1,0 +1,76 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div>
+    <h1 class="text-2xl font-bold text-text-main">Audit Trail</h1>
+    <p class="text-text-muted">Immutable record of all signing activity</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="flex items-center space-x-4">
+    <div class="flex-1">
+      <input
+        type="text"
+        [(ngModel)]="contractIdSearch"
+        placeholder="Search by contract ID..."
+        class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+      />
+    </div>
+    <input
+      type="text"
+      [(ngModel)]="dateRange"
+      placeholder="Date range"
+      class="bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+    />
+    <select
+      [(ngModel)]="eventTypeFilter"
+      class="bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+    >
+      <option value="ALL">All Events</option>
+      <option value="DOCUMENT_SIGNED">Signed</option>
+      <option value="DOCUMENT_DECLINED">Declined</option>
+      <option value="CONTRACT_EXECUTED">Executed</option>
+    </select>
+  </div>
+
+  <!-- Timeline -->
+  <div class="space-y-4">
+    <div *ngFor="let event of auditEvents" 
+         [class]="getEventBorderClass(event.type)"
+         class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <span [class]="getEventBadgeClass(event.type)" 
+                class="px-3 py-1 rounded-full text-xs font-medium">
+            {{ formatEventType(event.type) }}
+          </span>
+          <h3 class="font-semibold text-text-main">{{ event.documentName }}</h3>
+        </div>
+        <span class="text-success text-xs font-medium flex items-center space-x-1">
+          <span>✓</span>
+          <span>Blockchain verified</span>
+        </span>
+      </div>
+
+      <p class="text-text-main mb-4">{{ event.action }}</p>
+
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <span class="text-text-muted block">Performed by</span>
+          <span class="text-text-main">{{ event.performedBy }}</span>
+        </div>
+        <div>
+          <span class="text-text-muted block">Wallet Address</span>
+          <span class="font-mono text-text-main">{{ event.walletAddress }}</span>
+        </div>
+        <div>
+          <span class="text-text-muted block">Timestamp</span>
+          <span class="text-text-main">{{ event.timestamp }}</span>
+        </div>
+        <div>
+          <span class="text-text-muted block">Kafka Event ID</span>
+          <span class="font-mono text-text-muted">{{ event.kafkaEventId }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

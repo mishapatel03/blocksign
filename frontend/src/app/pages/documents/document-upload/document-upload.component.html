@@ -1,0 +1,185 @@
+<div class="max-w-2xl mx-auto space-y-6">
+  <!-- Header -->
+  <div>
+    <h1 class="text-2xl font-bold text-text-main">Upload Document</h1>
+    <p class="text-text-muted">Upload and send documents for signing</p>
+  </div>
+
+  <!-- Step Indicator -->
+  <div class="flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div [class.bg-primary]="currentStep >= 1" 
+           [class.bg-border]="currentStep < 1"
+           class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium transition-colors">
+        1
+      </div>
+      <span [class.text-primary]="currentStep >= 1" 
+            [class.text-text-muted]="currentStep < 1"
+            class="text-sm font-medium transition-colors">Upload</span>
+    </div>
+    <div class="flex-1 h-0.5 bg-border mx-4"></div>
+    <div class="flex items-center space-x-4">
+      <div [class.bg-primary]="currentStep >= 2" 
+           [class.bg-border]="currentStep < 2"
+           class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium transition-colors">
+        2
+      </div>
+      <span [class.text-primary]="currentStep >= 2" 
+            [class.text-text-muted]="currentStep < 2"
+            class="text-sm font-medium transition-colors">Add Signers</span>
+    </div>
+    <div class="flex-1 h-0.5 bg-border mx-4"></div>
+    <div class="flex items-center space-x-4">
+      <div [class.bg-primary]="currentStep >= 3" 
+           [class.bg-border]="currentStep < 3"
+           class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium transition-colors">
+        3
+      </div>
+      <span [class.text-primary]="currentStep >= 3" 
+            [class.text-text-muted]="currentStep < 3"
+            class="text-sm font-medium transition-colors">Review & Send</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Upload -->
+  <div *ngIf="currentStep === 1" class="bg-surface rounded-xl border border-border p-8">
+    <div
+      (drop)="onDrop($event)"
+      (dragover)="onDragOver($event)"
+      class="border-2 border-dashed border-border rounded-xl p-12 text-center hover:border-primary transition-colors cursor-pointer"
+    >
+      <input type="file" (change)="onFileSelected($event)" class="hidden" id="fileInput">
+      <label for="fileInput" class="cursor-pointer">
+        <div class="text-4xl mb-4">📄</div>
+        <p class="text-text-main font-medium mb-2">Drag & drop your PDF here</p>
+        <p class="text-text-muted text-sm">or click to browse</p>
+      </label>
+    </div>
+
+    <div *ngIf="selectedFile" class="mt-4 p-4 bg-background rounded-lg border border-border">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <span class="text-success text-xl">✓</span>
+          <div>
+            <p class="font-medium text-text-main">{{ selectedFile.name }}</p>
+            <p class="text-xs text-text-muted">{{ (selectedFile.size / 1024).toFixed(2) }} KB</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-6">
+      <button
+        (click)="nextStep()"
+        [disabled]="!selectedFile"
+        class="bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 2: Add Signers -->
+  <div *ngIf="currentStep === 2" class="bg-surface rounded-xl border border-border p-8">
+    <div class="space-y-4">
+      <div class="flex items-end space-x-4">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-text-main mb-2">Name</label>
+          <input
+            type="text"
+            [(ngModel)]="newSigner.name"
+            class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+            placeholder="Enter signer name"
+          />
+        </div>
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-text-main mb-2">Email</label>
+          <input
+            type="email"
+            [(ngModel)]="newSigner.email"
+            class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+            placeholder="Enter signer email"
+          />
+        </div>
+        <button
+          (click)="addSigner()"
+          class="bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+        >
+          Add Signer
+        </button>
+      </div>
+
+      <div *ngIf="signers.length > 0" class="space-y-2">
+        <div *ngFor="let signer of signers; let i = index" 
+             class="flex items-center justify-between p-3 bg-background rounded-lg border border-border">
+          <div>
+            <p class="font-medium text-text-main">{{ signer.name }}</p>
+            <p class="text-xs text-text-muted">{{ signer.email }}</p>
+          </div>
+          <button
+            (click)="removeSigner(i)"
+            class="text-danger hover:text-danger/80 transition-colors"
+          >
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button
+        (click)="previousStep()"
+        class="border border-border text-text-main hover:bg-white/5 rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Back
+      </button>
+      <button
+        (click)="nextStep()"
+        [disabled]="signers.length === 0"
+        class="bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+
+  <!-- Step 3: Review & Send -->
+  <div *ngIf="currentStep === 3" class="bg-surface rounded-xl border border-border p-8">
+    <div class="space-y-6">
+      <div class="p-4 bg-background rounded-lg border border-border">
+        <h3 class="font-semibold text-text-main mb-2">Document Summary</h3>
+        <div class="space-y-2 text-sm">
+          <p class="text-text-muted"><span class="text-text-main">Filename:</span> {{ selectedFile?.name }}</p>
+          <p class="text-text-muted"><span class="text-text-main">Signers:</span> {{ signers.length }}</p>
+          <div class="text-text-muted">
+            <span class="text-text-main">Signer emails:</span>
+            <ul class="list-disc list-inside mt-1">
+              <li *ngFor="let signer of signers">{{ signer.email }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 bg-primary/10 rounded-lg border border-primary/20">
+        <p class="text-sm text-primary">
+          ⚠️ Document will be hashed and recorded on Ethereum before sending
+        </p>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button
+        (click)="previousStep()"
+        class="border border-border text-text-main hover:bg-white/5 rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Back
+      </button>
+      <button
+        (click)="submit()"
+        class="bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Send for Signing
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,146 @@
+<div class="grid grid-cols-3 gap-6">
+  <!-- Left Column: Document Info (60%) -->
+  <div class="col-span-2 space-y-6">
+    <!-- Document Info Card -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <h2 class="text-lg font-semibold text-text-main mb-4">Document Information</h2>
+      <div class="space-y-3">
+        <div class="flex justify-between">
+          <span class="text-text-muted">Filename</span>
+          <span class="text-text-main font-medium">{{ document.name }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">Upload Date</span>
+          <span class="text-text-main">{{ document.uploadDate }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-text-muted">File Size</span>
+          <span class="text-text-main">{{ document.fileSize }}</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-text-muted">Status</span>
+          <span [class]="getStatusBadgeClass(document.status)" 
+                class="px-3 py-1 rounded-full text-xs font-medium">
+            {{ document.status }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Document Hash -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-text-main">Document Hash</h2>
+        <button (click)="copyToClipboard(document.hash)" 
+                class="text-primary hover:text-primary-dim text-sm transition-colors">
+          Copy
+        </button>
+      </div>
+      <p class="font-mono text-sm text-text-muted bg-background p-3 rounded-lg break-all">
+        {{ document.hash }}
+      </p>
+    </div>
+
+    <!-- Blockchain Info -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <h2 class="text-lg font-semibold text-text-main mb-4 flex items-center space-x-2">
+        <span>₿</span>
+        <span>Blockchain Information</span>
+      </h2>
+      <div class="space-y-3">
+        <div>
+          <span class="text-text-muted text-sm block mb-1">Transaction Hash</span>
+          <div class="flex items-center space-x-2">
+            <p class="font-mono text-sm text-text-main bg-background p-2 rounded-lg flex-1 break-all">
+              {{ document.transactionHash }}
+            </p>
+            <button (click)="copyToClipboard(document.transactionHash)" 
+                    class="text-primary hover:text-primary-dim transition-colors">
+              Copy
+            </button>
+          </div>
+        </div>
+        <div>
+          <span class="text-text-muted text-sm block mb-1">Block Number</span>
+          <p class="font-mono text-sm text-text-main bg-background p-2 rounded-lg">
+            {{ document.blockNumber }}
+          </p>
+        </div>
+        <a href="#" class="text-primary hover:text-primary-dim text-sm font-medium transition-colors">
+          View on Etherscan →
+        </a>
+      </div>
+    </div>
+
+    <!-- AI Risk Analysis -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-text-main">AI Risk Analysis</h2>
+        <span [class]="getRiskBadgeClass(riskAnalysis.level)" 
+              class="px-3 py-1 rounded-full text-xs font-medium">
+          {{ riskAnalysis.level }}
+        </span>
+      </div>
+      <div class="space-y-2">
+        <div *ngFor="let clause of riskAnalysis.flaggedClauses" 
+             class="flex items-center justify-between p-3 bg-background rounded-lg border border-border">
+          <span class="text-text-main text-sm">{{ clause.text }}</span>
+          <span [class]="getSeverityClass(clause.severity)" 
+                class="px-2 py-1 rounded-full text-xs font-medium">
+            {{ clause.severity }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Column: Signing Status (40%) -->
+  <div class="space-y-6">
+    <!-- Signers Card -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <h2 class="text-lg font-semibold text-text-main mb-4">
+        Signers (2 of 3 signed)
+      </h2>
+      <div class="space-y-4">
+        <div *ngFor="let signer of signers" 
+             class="flex items-center space-x-3 p-3 bg-background rounded-lg border border-border">
+          <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-medium">
+            {{ signer.name.charAt(0) }}
+          </div>
+          <div class="flex-1">
+            <p class="font-medium text-text-main text-sm">{{ signer.name }}</p>
+            <p class="text-xs text-text-muted">{{ signer.email }}</p>
+            <p *ngIf="signer.walletAddress" class="text-xs text-text-muted font-mono">
+              {{ signer.walletAddress }}
+            </p>
+          </div>
+          <div class="text-right">
+            <span [class]="getStatusBadgeClass(signer.status)" 
+                  class="px-2 py-1 rounded-full text-xs font-medium">
+              {{ signer.status }}
+            </span>
+            <p *ngIf="signer.signedDate" class="text-xs text-text-muted mt-1">
+              {{ signer.signedDate }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <h2 class="text-lg font-semibold text-text-main mb-4">Signing Timeline</h2>
+      <div class="space-y-4">
+        <div *ngFor="let event of timeline" 
+             class="flex items-start space-x-3">
+          <div class="w-3 h-3 rounded-full bg-primary mt-1.5 flex-shrink-0"></div>
+          <div>
+            <p class="text-sm text-text-main">{{ event.event }}</p>
+            <p class="text-xs text-text-muted">{{ event.date }}</p>
+            <p class="text-xs text-text-muted">by {{ event.user }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

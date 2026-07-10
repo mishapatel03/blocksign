@@ -1,0 +1,97 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-text-main">Documents</h1>
+      <p class="text-text-muted">Manage and track your documents</p>
+    </div>
+    <button
+      (click)="navigateToUpload()"
+      class="bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+    >
+      Upload Document
+    </button>
+  </div>
+
+  <!-- Search and Filters -->
+  <div class="flex items-center space-x-4">
+    <div class="flex-1">
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search documents..."
+        class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+      />
+    </div>
+    <select
+      [(ngModel)]="filterStatus"
+      class="bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+    >
+      <option value="ALL">All Status</option>
+      <option value="PENDING">Pending</option>
+      <option value="EXECUTED">Executed</option>
+      <option value="DECLINED">Declined</option>
+    </select>
+    <select
+      [(ngModel)]="sortBy"
+      class="bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
+    >
+      <option value="NEWEST">Newest</option>
+      <option value="OLDEST">Oldest</option>
+    </select>
+  </div>
+
+  <!-- Document Cards Grid -->
+  <div class="grid grid-cols-2 gap-4">
+    <div *ngFor="let doc of documents" 
+         class="bg-surface rounded-xl border border-border p-5 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 cursor-pointer"
+         (click)="navigateToDetail(doc.id)">
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center space-x-3">
+          <span class="text-2xl text-red-500">📄</span>
+          <div>
+            <p class="font-semibold text-text-main">{{ doc.name }}</p>
+            <p class="text-xs text-text-muted">{{ doc.date }}</p>
+          </div>
+        </div>
+        <span [class]="getStatusBadgeClass(doc.status)" 
+              class="px-3 py-1 rounded-full text-xs font-medium">
+          {{ doc.status }}
+        </span>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mb-4">
+        <div class="flex justify-between text-xs text-text-muted mb-1">
+          <span>{{ doc.progress }} of {{ doc.totalSigners }} signed</span>
+          <span>{{ getProgressPercent(doc) }}%</span>
+        </div>
+        <div class="w-full bg-background rounded-full h-2">
+          <div class="bg-primary h-2 rounded-full transition-all duration-300" 
+               [style.width.%]="(doc.progress / doc.totalSigners) * 100"></div>
+        </div>
+      </div>
+
+      <!-- Signers -->
+      <div class="flex items-center justify-between">
+        <div class="flex -space-x-2">
+          <div *ngFor="let signer of doc.signers; let i = index"
+               [class]="getSignerColor(i)"
+               class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-medium border-2 border-surface">
+            {{ signer }}
+          </div>
+        </div>
+        <div class="flex space-x-2">
+          <button
+            (click)="$event.stopPropagation(); navigateToDetail(doc.id)"
+            class="text-primary hover:text-primary-dim text-sm font-medium transition-colors">
+            View Details
+          </button>
+          <a href="#" class="text-text-muted hover:text-text-main text-sm font-medium transition-colors">
+            View on Blockchain
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

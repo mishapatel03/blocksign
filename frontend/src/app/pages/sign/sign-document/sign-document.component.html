@@ -1,0 +1,143 @@
+<div class="grid grid-cols-2 gap-6">
+  <!-- Left Column: PDF Preview -->
+  <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+    <h2 class="text-lg font-semibold text-text-main mb-4">Document Preview</h2>
+    <div class="bg-background rounded-lg border border-border p-8 text-center">
+      <div class="text-4xl mb-4">📄</div>
+      <p class="text-text-main font-medium mb-2">{{ document.name }}</p>
+      <p class="text-text-muted text-sm mb-4">Preview not available — download to review</p>
+      <button class="border border-primary text-primary hover:bg-primary/10 rounded-lg px-4 py-2.5 font-medium transition-all duration-200">
+        Download PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- Right Column: Signing Panel -->
+  <div class="space-y-6">
+    <!-- Contract Info -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <h2 class="text-lg font-semibold text-text-main mb-2">{{ document.name }}</h2>
+      <p class="text-text-muted text-sm">Sent by {{ document.sender }}</p>
+    </div>
+
+    <!-- AI Risk Analysis -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-text-main">AI Risk Analysis</h2>
+        <span [class]="getRiskBadgeClass(riskAnalysis.level)" 
+              class="px-3 py-1 rounded-full text-xs font-medium">
+          {{ riskAnalysis.level }}
+        </span>
+      </div>
+      <div class="space-y-2 mb-4">
+        <div *ngFor="let clause of riskAnalysis.flaggedClauses" 
+             class="flex items-start space-x-2">
+          <span class="text-warning mt-1">⚠️</span>
+          <span class="text-text-main text-sm">{{ clause.text }}</span>
+        </div>
+      </div>
+      <p class="text-text-muted text-sm italic">Review carefully before signing</p>
+    </div>
+
+    <!-- Wallet Connection -->
+    <div class="bg-surface rounded-xl border border-border p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200">
+      <h2 class="text-lg font-semibold text-text-main mb-4">Wallet Connection</h2>
+      <div *ngIf="!walletConnected">
+        <button
+          (click)="toggleWallet()"
+          class="w-full bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+        >
+          <span>🦊</span>
+          <span>Connect MetaMask</span>
+        </button>
+      </div>
+      <div *ngIf="walletConnected" 
+           class="flex items-center justify-between p-3 bg-background rounded-lg border border-border">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 bg-success rounded-full"></span>
+          <span class="text-text-main font-medium">{{ walletAddress }}</span>
+        </div>
+        <button (click)="toggleWallet()" class="text-text-muted hover:text-text-main text-sm transition-colors">
+          Disconnect
+        </button>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="space-y-3">
+      <button
+        (click)="openConfirmModal()"
+        [disabled]="!walletConnected"
+        class="w-full bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+      >
+        <span>✍️</span>
+        <span>Sign Document</span>
+      </button>
+      <button
+        (click)="openDeclineModal()"
+        class="w-full border border-danger text-danger hover:bg-danger/10 rounded-lg px-4 py-2.5 font-medium transition-all duration-200 flex items-center justify-center space-x-2"
+      >
+        <span>✖️</span>
+        <span>Decline</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div *ngIf="showConfirmModal" 
+     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-surface rounded-xl border border-border p-6 max-w-md w-full mx-4">
+    <h2 class="text-lg font-semibold text-text-main mb-4">Confirm Signature</h2>
+    <p class="text-text-muted mb-4">You are about to sign:</p>
+    <p class="font-mono text-sm text-text-main bg-background p-3 rounded-lg mb-4 break-all">
+      {{ document.hash }}
+    </p>
+    <p class="text-text-muted text-sm mb-6">
+      This action is permanent and will be recorded on the Ethereum blockchain
+    </p>
+    <div class="flex space-x-3">
+      <button
+        (click)="closeConfirmModal()"
+        class="flex-1 border border-border text-text-main hover:bg-white/5 rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="confirmSign()"
+        class="flex-1 bg-primary hover:bg-primary-dim text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Decline Modal -->
+<div *ngIf="showDeclineModal" 
+     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+  <div class="bg-surface rounded-xl border border-border p-6 max-w-md w-full mx-4">
+    <h2 class="text-lg font-semibold text-text-main mb-4">Decline Document</h2>
+    <p class="text-text-muted mb-4">Please provide a reason for declining:</p>
+    <textarea
+      [(ngModel)]="declineReason"
+      rows="4"
+      class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200 mb-4"
+      placeholder="Enter your reason..."
+    ></textarea>
+    <div class="flex space-x-3">
+      <button
+        (click)="closeDeclineModal()"
+        class="flex-1 border border-border text-text-main hover:bg-white/5 rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="confirmDecline()"
+        class="flex-1 bg-danger hover:bg-danger/90 text-white rounded-lg px-4 py-2.5 font-medium transition-all duration-200"
+      >
+        Decline
+      </button>
+    </div>
+  </div>
+</div>

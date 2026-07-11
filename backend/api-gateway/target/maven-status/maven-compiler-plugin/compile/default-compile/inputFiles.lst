@@ -1,0 +1,5 @@
+/Users/mishapatel/Desktop/blocksign/backend/api-gateway/src/main/java/com/blocksign/gateway/ApiGatewayApplication.java
+/Users/mishapatel/Desktop/blocksign/backend/api-gateway/src/main/java/com/blocksign/gateway/config/SecurityConfig.java
+/Users/mishapatel/Desktop/blocksign/backend/api-gateway/src/main/java/com/blocksign/gateway/filter/JwtAuthFilter.java
+/Users/mishapatel/Desktop/blocksign/backend/api-gateway/src/main/java/com/blocksign/gateway/util/JwtUtil.java
+/Users/mishapatel/Desktop/blocksign/backend/api-gateway/src/main/java/com/blocksign/gateway/config/GatewayConfig.java

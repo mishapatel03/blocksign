@@ -1,0 +1,5 @@
+com/blocksign/gateway/config/SecurityConfig.class
+com/blocksign/gateway/filter/JwtAuthFilter.class
+com/blocksign/gateway/config/GatewayConfig.class
+com/blocksign/gateway/ApiGatewayApplication.class
+com/blocksign/gateway/util/JwtUtil.class

@@ -17,19 +17,27 @@
         <p class="text-sm text-text-muted">Sign in to your account</p>
       </div>
 
+      <!-- Error Message -->
+      <div *ngIf="errorMessage" class="mb-4 bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm">
+        {{ errorMessage }}
+      </div>
+
       <!-- Form -->
-      <form (ngSubmit)="onSubmit()">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="space-y-4">
           <!-- Email Input -->
           <div>
             <label class="block text-sm font-medium text-text-main mb-2">Email</label>
             <input
               type="email"
-              [(ngModel)]="email"
-              required
+              formControlName="email"
               class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
               placeholder="Enter your email"
             />
+            <div *ngIf="email?.invalid && email?.touched" class="mt-1 text-sm text-red-400">
+              <span *ngIf="email?.errors?.['required']">Email is required</span>
+              <span *ngIf="email?.errors?.['email']">Please enter a valid email</span>
+            </div>
           </div>
 
           <!-- Password Input -->
@@ -38,8 +46,7 @@
             <div class="relative">
               <input
                 [type]="showPassword ? 'text' : 'password'"
-                [(ngModel)]="password"
-                required
+                formControlName="password"
                 class="w-full bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200 pr-10"
                 placeholder="Enter your password"
               />
@@ -57,6 +64,10 @@
                 </svg>
               </button>
             </div>
+            <div *ngIf="password?.invalid && password?.touched" class="mt-1 text-sm text-red-400">
+              <span *ngIf="password?.errors?.['required']">Password is required</span>
+              <span *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</span>
+            </div>
           </div>
 
           <!-- Remember Me & Forgot Password -->
@@ -64,7 +75,7 @@
             <label class="flex items-center space-x-2">
               <input
                 type="checkbox"
-                [(ngModel)]="rememberMe"
+                formControlName="rememberMe"
                 class="w-4 h-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0"
               />
               <span class="text-sm text-text-muted">Remember me</span>

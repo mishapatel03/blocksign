@@ -80,12 +80,12 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return !!this.accessToken;
-  }
+  return !!this.accessToken || !!localStorage.getItem('access_token');
+}
 
   getToken(): string | null {
-    return this.accessToken;
-  }
+  return this.accessToken || localStorage.getItem('access_token');
+}
 
   getCurrentUser(): any {
     return this.currentUserSubject.value;

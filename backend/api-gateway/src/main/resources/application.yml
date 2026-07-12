@@ -36,7 +36,7 @@ spring:
           '[/**]':
             allowedOrigins:
               - "http://localhost:4200"
-              - "https://blocksign-xyz.vercel.app"
+              - "https://blocksign-1qilt7wdn-mishapatel.vercel.app"
             allowedMethods:
               - GET
               - POST

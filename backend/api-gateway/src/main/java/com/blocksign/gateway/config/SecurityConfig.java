@@ -26,7 +26,7 @@ public CorsConfigurationSource corsConfigurationSource() {
   CorsConfiguration config = new CorsConfiguration();
   config.setAllowedOrigins(List.of(
       "http://localhost:4200",
-      "https://your-app.vercel.app"
+      "https://https://blocksign-1qilt7wdn-mishapatel.vercel.app"
   ));
   config.setAllowedMethods(List.of(
       "GET", "POST", "PUT", "DELETE", "OPTIONS"));

@@ -1,14 +1,19 @@
 server:
-  port: 8084
+  port: ${PORT:8084}
 
 spring:
   application:
     name: blockchain-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/blocksign_blockchain
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://dpg-d997fncs728c73crljn0-a.oregon-postgres.render.com:5432/blocksign_docs?sslmode=require
+    username: blocksign_user
+    password: 7KTbsnTKchrW2KcNoKGnFqg8d6Pj1kEn
     driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+      minimum-idle: 1
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -16,6 +21,7 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
 blockchain:
   infura:

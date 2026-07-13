@@ -17,7 +17,7 @@ interface AuthResponse {
   };
 }
 
-interface LoginRequest {
+interface LoginRequest {  
   email: string;
   password: string;
 }
@@ -40,6 +40,7 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
+    console.log('API URL:', environment.apiUrl); 
     this.loadUserFromStorage();
   }
 

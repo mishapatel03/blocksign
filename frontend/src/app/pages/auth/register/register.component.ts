@@ -72,7 +72,13 @@ export class RegisterComponent {
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error?.message || 'Registration failed. Please try again.';
+        if (error.status === 409) {
+          this.errorMessage = error.error?.message || 'Email already registered. Please use a different email or login.';
+        } else if (error.status === 400) {
+          this.errorMessage = error.error?.message || 'Invalid input. Please check your details.';
+        } else {
+          this.errorMessage = error.error?.message || 'Registration failed. Please try again later.';
+        }
       }
     });
   }

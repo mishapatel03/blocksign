@@ -1,11 +1,15 @@
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/repository/UserRepository.java
+/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/exception/AccountDisabledException.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/AuthServiceApplication.java
-/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/util/JwtUtil.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/dto/response/AuthResponse.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/config/SecurityConfig.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/dto/request/RegisterRequest.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/controller/AuthController.java
+/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/config/CorsConfig.java
+/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/exception/GlobalExceptionHandler.java
+/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/exception/UserAlreadyExistsException.java
+/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/util/JwtUtil.java
+/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/exception/InvalidCredentialsException.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/entity/User.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/dto/request/LoginRequest.java
-/Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/config/CorsConfig.java
 /Users/mishapatel/Desktop/blocksign/backend/auth-service/src/main/java/com/blocksign/auth/service/AuthService.java

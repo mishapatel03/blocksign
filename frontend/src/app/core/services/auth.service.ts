@@ -5,16 +5,12 @@ import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 interface AuthResponse {
-  accessToken: string;
-  tokenType: string;
-  expiresIn: number;
-  user: {
-    userId: string;
-    email: string;
-    name: string;
-    role: string;
-    tenantId: string;
-  };
+  token: string;
+  type: string;
+  userId: number;
+  email: string;
+  name: string;
+  tenantId: string;
 }
 
 interface LoginRequest {  
@@ -50,10 +46,16 @@ export class AuthService {
       { email, password } as LoginRequest
     ).pipe(
       tap(response => {
-        this.accessToken = response.accessToken;
-        localStorage.setItem('access_token', response.accessToken);
-        localStorage.setItem('user_info', JSON.stringify(response.user));
-        this.currentUserSubject.next(response.user);
+        this.accessToken = response.token;
+        localStorage.setItem('access_token', response.token);
+        const userInfo = {
+          userId: response.userId,
+          email: response.email,
+          name: response.name,
+          tenantId: response.tenantId
+        };
+        localStorage.setItem('user_info', JSON.stringify(userInfo));
+        this.currentUserSubject.next(userInfo);
       })
     );
   }
@@ -64,10 +66,16 @@ export class AuthService {
       { email, password, name } as RegisterRequest
     ).pipe(
       tap(response => {
-        this.accessToken = response.accessToken;
-        localStorage.setItem('access_token', response.accessToken);
-        localStorage.setItem('user_info', JSON.stringify(response.user));
-        this.currentUserSubject.next(response.user);
+        this.accessToken = response.token;
+        localStorage.setItem('access_token', response.token);
+        const userInfo = {
+          userId: response.userId,
+          email: response.email,
+          name: response.name,
+          tenantId: response.tenantId
+        };
+        localStorage.setItem('user_info', JSON.stringify(userInfo));
+        this.currentUserSubject.next(userInfo);
       })
     );
   }

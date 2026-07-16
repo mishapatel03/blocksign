@@ -6,5 +6,6 @@ com/blocksign/auth/dto/request/LoginRequest.class
 com/blocksign/auth/entity/User.class
 com/blocksign/auth/dto/request/RegisterRequest.class
 com/blocksign/auth/util/JwtUtil.class
+com/blocksign/auth/config/CorsConfig.class
 com/blocksign/auth/controller/AuthController.class
 com/blocksign/auth/AuthServiceApplication.class

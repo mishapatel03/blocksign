@@ -1,28 +1,39 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LucideAngularModule, Bell } from 'lucide-angular';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
 export class NavbarComponent {
-  walletConnected = false;
-  walletAddress = '0xAbCd...1234';
-  pageTitle = 'Dashboard';
-  breadcrumb = 'BlockSign / Dashboard';
+  pageTitle = 'BlockSign';
+  notificationCount = 3;
+  Bell = Bell;
 
-  constructor(private router: Router) {}
-
-  toggleWallet(): void {
-    this.walletConnected = !this.walletConnected;
+  constructor(private router: Router, private route: ActivatedRoute) {
+    this.updatePageTitle();
   }
 
-  logout(): void {
-    localStorage.removeItem('auth_token');
-    this.router.navigate(['/login']);
+  private updatePageTitle(): void {
+    this.router.events.subscribe(() => {
+      const url = this.router.url;
+      
+      if (url === '/dashboard') {
+        this.pageTitle = 'Dashboard';
+      } else if (url === '/documents') {
+        this.pageTitle = 'Documents';
+      } else if (url === '/documents/upload') {
+        this.pageTitle = 'Upload Document';
+      } else if (url === '/audit') {
+        this.pageTitle = 'Audit Trail';
+      } else {
+        this.pageTitle = 'BlockSign';
+      }
+    });
   }
 }

@@ -1,4 +1,4 @@
-<div class="space-y-6">
+<div class="page-enter space-y-6">
   <!-- Header -->
   <div class="flex items-center justify-between">
     <div>
@@ -13,6 +13,19 @@
     </button>
   </div>
 
+  <!-- Filter Buttons Row -->
+  <div class="flex items-center space-x-2">
+    <button
+      *ngFor="let filter of filters"
+      (click)="setFilter(filter)"
+      [class]="activeFilter === filter 
+        ? 'bg-primary text-white' 
+        : 'bg-surface text-text-muted border border-border hover:border-primary hover:text-primary'"
+      class="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200">
+      {{ filter | titlecase }}
+    </button>
+  </div>
+
   <!-- Search and Filters -->
   <div class="flex items-center space-x-4">
     <div class="flex-1">
@@ -24,15 +37,6 @@
       />
     </div>
     <select
-      [(ngModel)]="filterStatus"
-      class="bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
-    >
-      <option value="ALL">All Status</option>
-      <option value="PENDING">Pending</option>
-      <option value="EXECUTED">Executed</option>
-      <option value="DECLINED">Declined</option>
-    </select>
-    <select
       [(ngModel)]="sortBy"
       class="bg-background border border-border rounded-lg px-4 py-2.5 text-text-main focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-200"
     >
@@ -42,8 +46,8 @@
   </div>
 
   <!-- Document Cards Grid -->
-  <div class="grid grid-cols-2 gap-4">
-    <div *ngFor="let doc of documents" 
+  <div *ngIf="filteredDocuments.length > 0" class="grid grid-cols-2 gap-4">
+    <div *ngFor="let doc of filteredDocuments" 
          class="bg-surface rounded-xl border border-border p-5 hover:shadow-lg hover:shadow-primary/5 transition-all duration-200 cursor-pointer"
          (click)="navigateToDetail(doc.id)">
       <div class="flex items-start justify-between mb-4">
@@ -93,5 +97,15 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Empty State for Filtered Results -->
+  <div *ngIf="filteredDocuments.length === 0" 
+       class="flex flex-col items-center justify-center py-12 text-center">
+    <p class="text-text-muted text-sm">No {{ activeFilter | titlecase }} documents found</p>
+    <button (click)="clearFilter()"
+      class="mt-3 text-primary text-sm hover:underline transition-colors">
+      Clear filter
+    </button>
   </div>
 </div>
